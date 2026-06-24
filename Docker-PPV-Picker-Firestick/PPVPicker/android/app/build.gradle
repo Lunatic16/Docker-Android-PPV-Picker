@@ -1,0 +1,132 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// android/app/build.gradle
+// PPVPicker — optimised for Android 9 (API 28) on armeabi-v7a low-spec hardware
+// ─────────────────────────────────────────────────────────────────────────────
+
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+
+/**
+ * React Native / Hermes configuration block.
+ * hermesEnabled = true  →  Hermes JS engine (lowest RAM footprint).
+ */
+react {
+    /* Root of the JS source tree (relative to android/app/) */
+    root = file("../../")
+
+    /* Entry file */
+    entryFile = file("../../index.js")
+
+    /* Explicitly define the react-native directory path */
+    reactNativeDir = file("../../node_modules/react-native")
+    codegenDir = file("../../node_modules/@react-native/codegen")
+    cliFile = file("../../node_modules/react-native/cli.js")
+
+    /* Enable Hermes for the smallest possible memory footprint on armeabi-v7a */
+    hermesEnabled = true
+
+    /* Disable the new architecture (Fabric / TurboModules) for max
+       compatibility with Android 9 legacy drivers.                    */
+    newArchEnabled = false
+}
+
+android {
+    namespace "com.ppvpicker"
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.ppvpicker"
+
+        // ── SDK targets ──────────────────────────────────────────────────────
+        // minSdkVersion 28 = Android 9 "Pie" — the floor for this build.
+        minSdkVersion 28
+        targetSdkVersion 34
+
+        versionCode 1
+        versionName "1.0.0"
+
+        // ── ABI filter ───────────────────────────────────────────────────────
+        // Restrict to armeabi-v7a only. This eliminates the arm64-v8a, x86,
+        // and x86_64 slices from the APK, cutting install size on set-top boxes
+        // and low-spec media sticks that run on 32-bit ARMv7 SoCs.
+        ndk {
+            abiFilters "armeabi-v7a"
+        }
+
+        // ── Multidex ─────────────────────────────────────────────────────────
+        // React Native's method count exceeds 65 k; multidex is required.
+        multiDexEnabled true
+    }
+
+    // ── Signing configs ──────────────────────────────────────────────────────
+    signingConfigs {
+        debug {
+            storeFile file("debug.keystore")
+            storePassword "android"
+            keyAlias "androiddebugkey"
+            keyPassword "android"
+        }
+        release {
+            // Set via environment variables or a local.properties file.
+            // Do NOT hard-code credentials in source control.
+            if (project.hasProperty("RELEASE_STORE_FILE")) {
+                storeFile     file(RELEASE_STORE_FILE)
+                storePassword RELEASE_STORE_PASSWORD
+                keyAlias      RELEASE_KEY_ALIAS
+                keyPassword   RELEASE_KEY_PASSWORD
+            }
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            // Keep debug symbols for crash analysis during development.
+            debuggable true
+        }
+        release {
+            signingConfig signingConfigs.release
+            // Minify / shrink to reduce APK size for memory-constrained devices.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"),
+                          "proguard-rules.pro"
+        }
+    }
+
+    // ── Java / Kotlin compile options ────────────────────────────────────────
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
+    // ── Packaging options ────────────────────────────────────────────────────
+    packagingOptions {
+        // Strip native lib duplicates that can occur when merging AAR files.
+        pickFirst "lib/armeabi-v7a/libc++_shared.so"
+        exclude "META-INF/DEPENDENCIES"
+        exclude "META-INF/LICENSE"
+        exclude "META-INF/LICENSE.txt"
+        exclude "META-INF/NOTICE"
+        exclude "META-INF/NOTICE.txt"
+    }
+}
+
+dependencies {
+    // ── React Native core ────────────────────────────────────────────────────
+    implementation("com.facebook.react:react-android")
+    implementation("com.facebook.react:hermes-android")
+
+    // ── AndroidX essentials ──────────────────────────────────────────────────
+    implementation "androidx.appcompat:appcompat:1.7.0"
+    implementation "androidx.multidex:multidex:2.0.1"
+
+    // ── react-native-webview ─────────────────────────────────────────────────
+    // Included transitively via the npm package; listed here for clarity only.
+    // implementation "com.github.react-native-webview:react-native-webview:13.x"
+}
