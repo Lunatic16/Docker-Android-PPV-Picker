@@ -10,25 +10,6 @@ Both flavors share the same source code under `PPVPicker/` and differ only in Gr
 
 ---
 
-## Table of Contents
-
-1. [Tech Stack](#tech-stack)
-2. [Prerequisites](#prerequisites)
-3. [Project Structure](#project-structure)
-4. [Getting Started](getting--started)
-   - [Mobile](#getting-started---mobile)
-   - [Firestick](#getting-started---firestick)
-5. [Available Scripts](#available-scripts)
-6. [Building Signed APKs](#building-signed-apks)
-7. [Testing](#testing)
-8. [Architecture Overview](#architecture-overview)
-9. [Environment Variables](#environment-variables)
-10. [Troubleshooting](#troubleshooting)
-11. [Contributing](#contributing)
-12. [License](#license)
-
----
-
 ## Tech Stack
 
 | Category | Mobile Flavor | Firestick Flavor |
