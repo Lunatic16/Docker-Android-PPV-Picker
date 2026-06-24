@@ -74,21 +74,11 @@ Docker-PPV-Picker-Firestick/ # 32‑bit ARMv7‑only flavor
 
 ```bash
 # 1️⃣ Clone the repo
-git clone https://github.com/your-org/PPVPicker.git
+git clone github.com/Lunatic16/Docker-Android-PPV-Picker.git
 cd Docker-PPV-Picker/Docker-PPV-Picker-mobile
 
-# 2️⃣ Install JS dependencies
-npm install
-
-# 3️⃣ (Optional) Run lint / type‑check
-npm run lint
-npm run ts-check
-
-# 4️⃣ Start the Metro bundler
-npm run start
-
-# 5️⃣ In another terminal, launch the Android emulator or connect a device, then:
-npm run android
+# 2️⃣ Build a APK using Docker (see the next section for signing details)
+./build-apk.sh
 ```
 
 The app will launch on the device/emulator pointing at `http://localhost:8081` (Metro). If you prefer a physical device, enable USB debugging and ensure the device is visible to `adb`.
@@ -101,14 +91,11 @@ The Firestick flavor is built for **armeabi‑v7a** devices (e.g., Amazon Fire T
 
 ```bash
 # 1️⃣ Clone and cd into the Firestick directory
-git clone https://github.com/your-org/PPVPicker.git
+git clone github.com/Lunatic16/Docker-Android-PPV-Picker.git
 cd Docker-PPV-Picker/Docker-PPV-Picker-Firestick
 
-# 2️⃣ Install JS dependencies
-npm install
-
-# 3️⃣ Build a signed APK using Docker (see the next section for signing details)
-./build-apk-signed.sh
+# 2️⃣ Build a APK using Docker (see the next section for signing details)
+./build-apk.sh
 ```
 
 The script will prompt for the keystore password and key password, then output `output/ppvpicker-release.apk`. Transfer the APK to the Firestick (e.g., via `adb install`) and launch.
