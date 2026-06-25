@@ -81,8 +81,6 @@ cd Docker-PPV-Picker/Docker-PPV-Picker-mobile
 ./build-apk.sh
 ```
 
-The app will launch on the device/emulator pointing at `http://localhost:8081` (Metro). If you prefer a physical device, enable USB debugging and ensure the device is visible to `adb`.
-
 ---
 
 ## Getting Started – Firestick
